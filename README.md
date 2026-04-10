@@ -41,6 +41,6 @@ Um assistente virtual em Python desenvolvido para ajudar pessoas (especialmente 
     python main.py
 
 🧪 Como rodar os testes e a formatação
-Para garantir que o código está funcionando e formatado corretamente, use os comandos abaixo na raiz do projeto:
--Para testar a lógica matemática: pytest
--Para verificar o estilo do código (PEP 8): flake8
+   Para garantir que o código está funcionando e formatado corretamente, use os comandos abaixo na raiz do projeto:
+   -Para testar a lógica matemática: pytest
+   -Para verificar o estilo do código (PEP 8): flake8
