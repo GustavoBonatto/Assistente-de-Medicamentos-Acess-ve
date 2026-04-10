@@ -1,0 +1,36 @@
+name: Validacao de Codigo
+
+# O robô vai rodar sempre que houver um push ou pull request na branch main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # O robô vai usar um computador com Linux na nuvem
+
+    steps:
+    - name: Copiando o codigo do repositorio
+      uses: actions/checkout@v3
+
+    - name: Configurando o Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10" # Versão do Python
+
+    - name: Instalando dependencias do sistema e do Python
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y espeak  # Dependência necessária para o pyttsx3 no Linux
+        python -m pip install --upgrade pip
+        pip install flake8 pytest pyttsx3
+
+    - name: Rodar Linting (Flake8)
+      run: |
+        flake8
+
+    - name: Rodar Testes (Pytest)
+      run: |
+        pytest
