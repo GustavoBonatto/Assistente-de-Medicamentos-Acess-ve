@@ -1,0 +1,14 @@
+[
+    {
+        "nome": "Paracetamol",
+        "dosagem": "500 miligramas",
+        "intervalo_horas": 8,
+        "ultima_dose": null
+    },
+    {
+        "nome": "Vitamina D",
+        "dosagem": "uma gota",
+        "intervalo_horas": 24,
+        "ultima_dose": null
+    }
+]

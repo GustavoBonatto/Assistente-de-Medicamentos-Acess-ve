@@ -1,6 +1,9 @@
 import pyttsx3
 from datetime import datetime
 from models import Medicamento
+import json
+import os
+
 
 class AssistenteVoz:
     """Responsável pela acessibilidade sonora do sistema."""
@@ -26,12 +29,38 @@ class GerenciadorSaude:
     """Controla a lista de remédios e avisa os horários."""
     
     def __init__(self):
-        self.medicamentos = []
+        # Define onde o arquivo JSON será salvo
+        self.caminho_arquivo = os.path.join('..', 'data', 'remedios.json')
+        # Carrega os dados antes de iniciar o assistente
+        self.medicamentos = self.carregar_dados()
         self.voz = AssistenteVoz()
+
+    def salvar_dados(self):
+        """Salva a lista de medicamentos no arquivo JSON."""
+        dados = [m.to_dict() for m in self.medicamentos]
+        with open(self.caminho_arquivo, 'w') as f:
+            json.dump(dados, f, indent=4)
+
+    def carregar_dados(self):
+        """Lê o arquivo JSON e transforma de volta em objetos Medicamento."""
+        if os.path.exists(self.caminho_arquivo):
+            with open(self.caminho_arquivo, 'r') as f:
+                dados_brutos = json.load(f)
+                medicamentos_carregados = []
+                
+                for d in dados_brutos:
+                    # Se tiver data salva, transforma o texto de volta para datetime
+                    if d.get('ultima_dose'):
+                        d['ultima_dose'] = datetime.fromisoformat(d['ultima_dose'])
+                    medicamentos_carregados.append(Medicamento(**d))
+                
+                return medicamentos_carregados
+        return []
 
     def adicionar_medicamento(self, nome, dosagem, intervalo):
         novo_remedio = Medicamento(nome, dosagem, intervalo)
         self.medicamentos.append(novo_remedio)
+        self.salvar_dados() # Salva no JSON sempre que adicionar
         self.voz.adicionar_na_fila(f"O remédio {nome} foi cadastrado com sucesso.")
 
     def verificar_agenda(self):
@@ -45,6 +74,7 @@ class GerenciadorSaude:
                 aviso = f"Está na hora de tomar o {remedio.nome}. A dosagem é de {remedio.dosagem}."
                 self.voz.adicionar_na_fila(aviso)
                 remedio.ultima_dose = agora
+                self.salvar_dados() # Salva no JSON porque a 'ultima_dose' mudou
             else:
                 tempo_restante = proxima - agora
                 horas = int(tempo_restante.total_seconds() // 3600)
