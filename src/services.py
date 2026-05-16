@@ -31,7 +31,7 @@ class GerenciadorSaude:
 
     def __init__(self):
         # Define onde o arquivo JSON será salvo
-        self.caminho_arquivo = os.path.join('..', 'data', 'remedios.json')
+        self.caminho_arquivo = 'data/remedios.json'
         # Carrega os dados antes de iniciar o assistente
         self.medicamentos = self.carregar_dados()
         self.voz = AssistenteVoz()
